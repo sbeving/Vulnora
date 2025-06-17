@@ -10,14 +10,12 @@ import (
 	"syscall"
 
 	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/widget"
-	"fyne.io/fyne/v2/container"
-	
+
+	"vulnora/internal/agents"
+	"vulnora/internal/ai"
 	"vulnora/internal/core"
 	"vulnora/internal/gui"
 	"vulnora/internal/proxy"
-	"vulnora/internal/ai"
-	"vulnora/internal/agents"
 )
 
 const (
@@ -68,7 +66,7 @@ func runCLIMode(ctx context.Context, config *core.Config, target string) {
 	}
 
 	fmt.Printf("Starting Vulnora CLI scan against: %s\n", target)
-	
+
 	// Initialize AI engine
 	aiEngine, err := ai.NewEngine(config.AI)
 	if err != nil {
@@ -77,7 +75,7 @@ func runCLIMode(ctx context.Context, config *core.Config, target string) {
 
 	// Initialize agent manager
 	agentManager := agents.NewManager(config.Agents, aiEngine)
-	
+
 	// Start scanning
 	go func() {
 		result, err := agentManager.ScanTarget(ctx, target)
@@ -114,7 +112,7 @@ func runGUIMode(ctx context.Context, config *core.Config, proxyPort int) {
 
 	// Create main window
 	mainWindow := gui.NewMainWindow(myApp, proxyServer, agentManager, aiEngine)
-	
+
 	// Start proxy server
 	go func() {
 		if err := proxyServer.Start(ctx, proxyPort); err != nil {
