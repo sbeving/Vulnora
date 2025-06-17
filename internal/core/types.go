@@ -10,52 +10,52 @@ import (
 
 // RequestResponse represents an HTTP request/response pair
 type RequestResponse struct {
-	ID            string            `json:"id" gorm:"primaryKey"`
-	SessionID     string            `json:"session_id" gorm:"index"`
-	Timestamp     time.Time         `json:"timestamp"`
-	Method        string            `json:"method"`
-	URL           string            `json:"url"`
-	Host          string            `json:"host" gorm:"index"`
-	Path          string            `json:"path"`
-	Query         string            `json:"query"`
+	ID              string            `json:"id" gorm:"primaryKey"`
+	SessionID       string            `json:"session_id" gorm:"index"`
+	Timestamp       time.Time         `json:"timestamp"`
+	Method          string            `json:"method"`
+	URL             string            `json:"url"`
+	Host            string            `json:"host" gorm:"index"`
+	Path            string            `json:"path"`
+	Query           string            `json:"query"`
 	RequestHeaders  map[string]string `json:"request_headers" gorm:"type:json"`
-	RequestBody   []byte            `json:"request_body"`
-	StatusCode    int               `json:"status_code"`
+	RequestBody     []byte            `json:"request_body"`
+	StatusCode      int               `json:"status_code"`
 	ResponseHeaders map[string]string `json:"response_headers" gorm:"type:json"`
-	ResponseBody  []byte            `json:"response_body"`
-	ContentType   string            `json:"content_type"`
-	ContentLength int64             `json:"content_length"`
-	Duration      time.Duration     `json:"duration"`
-	Source        string            `json:"source"` // proxy, scanner, agent
-	Tags          []string          `json:"tags" gorm:"type:json"`
-	Notes         string            `json:"notes"`
+	ResponseBody    []byte            `json:"response_body"`
+	ContentType     string            `json:"content_type"`
+	ContentLength   int64             `json:"content_length"`
+	Duration        time.Duration     `json:"duration"`
+	Source          string            `json:"source"` // proxy, scanner, agent
+	Tags            []string          `json:"tags" gorm:"type:json"`
+	Notes           string            `json:"notes"`
 }
 
 // Vulnerability represents a discovered vulnerability
 type Vulnerability struct {
-	ID             string                 `json:"id" gorm:"primaryKey"`
-	SessionID      string                 `json:"session_id" gorm:"index"`
-	RequestID      string                 `json:"request_id" gorm:"index"`
-	Type           VulnerabilityType      `json:"type"`
-	Severity       Severity               `json:"severity"`
-	Title          string                 `json:"title"`
-	Description    string                 `json:"description"`
-	Evidence       string                 `json:"evidence"`
-	Remediation    string                 `json:"remediation"`
-	References     []string               `json:"references" gorm:"type:json"`
-	CVSSScore      float64                `json:"cvss_score"`
-	CVSSVector     string                 `json:"cvss_vector"`
-	Confidence     ConfidenceLevel        `json:"confidence"`
-	Payload        string                 `json:"payload"`
-	Parameter      string                 `json:"parameter"`
-	Location       VulnerabilityLocation  `json:"location"`
-	Verified       bool                   `json:"verified"`
-	FalsePositive  bool                   `json:"false_positive"`
-	AIGenerated    bool                   `json:"ai_generated"`
-	AIConfidence   float64                `json:"ai_confidence"`
-	DiscoveredAt   time.Time              `json:"discovered_at"`
-	UpdatedAt      time.Time              `json:"updated_at"`
-	Metadata       map[string]interface{} `json:"metadata" gorm:"type:json"`
+	ID            string                 `json:"id" gorm:"primaryKey"`
+	SessionID     string                 `json:"session_id" gorm:"index"`
+	RequestID     string                 `json:"request_id" gorm:"index"`
+	Type          VulnerabilityType      `json:"type"`
+	Severity      Severity               `json:"severity"`
+	Title         string                 `json:"title"`
+	Description   string                 `json:"description"`
+	Evidence      string                 `json:"evidence"`
+	Remediation   string                 `json:"remediation"`
+	References    []string               `json:"references" gorm:"type:json"`
+	CVSSScore     float64                `json:"cvss_score"`
+	CVSSVector    string                 `json:"cvss_vector"`
+	Confidence    ConfidenceLevel        `json:"confidence"`
+	Payload       string                 `json:"payload"`
+	Parameter     string                 `json:"parameter"`
+	Location      VulnerabilityLocation  `json:"location"`
+	Verified      bool                   `json:"verified"`
+	FalsePositive bool                   `json:"false_positive"`
+	AIGenerated   bool                   `json:"ai_generated"`
+	AIConfidence  float64                `json:"ai_confidence"`
+	DiscoveredAt  time.Time              `json:"discovered_at"`
+	UpdatedAt     time.Time              `json:"updated_at"`
+	Metadata      map[string]interface{} `json:"metadata" gorm:"type:json"`
 }
 
 // Session represents a testing session
@@ -75,20 +75,20 @@ type Session struct {
 
 // Agent represents a worker agent
 type Agent struct {
-	ID             string            `json:"id" gorm:"primaryKey"`
-	Name           string            `json:"name"`
-	Type           AgentType         `json:"type"`
-	Status         AgentStatus       `json:"status"`
-	Host           string            `json:"host"`
-	Port           int               `json:"port"`
-	Version        string            `json:"version"`
-	Capabilities   []string          `json:"capabilities" gorm:"type:json"`
-	Tags           []string          `json:"tags" gorm:"type:json"`
-	LastHeartbeat  time.Time         `json:"last_heartbeat"`
-	RegisteredAt   time.Time         `json:"registered_at"`
-	ResourceUsage  ResourceUsage     `json:"resource_usage" gorm:"type:json"`
-	TaskQueue      []string          `json:"task_queue" gorm:"type:json"`
-	Configuration  map[string]interface{} `json:"configuration" gorm:"type:json"`
+	ID            string                 `json:"id" gorm:"primaryKey"`
+	Name          string                 `json:"name"`
+	Type          AgentType              `json:"type"`
+	Status        AgentStatus            `json:"status"`
+	Host          string                 `json:"host"`
+	Port          int                    `json:"port"`
+	Version       string                 `json:"version"`
+	Capabilities  []string               `json:"capabilities" gorm:"type:json"`
+	Tags          []string               `json:"tags" gorm:"type:json"`
+	LastHeartbeat time.Time              `json:"last_heartbeat"`
+	RegisteredAt  time.Time              `json:"registered_at"`
+	ResourceUsage ResourceUsage          `json:"resource_usage" gorm:"type:json"`
+	TaskQueue     []string               `json:"task_queue" gorm:"type:json"`
+	Configuration map[string]interface{} `json:"configuration" gorm:"type:json"`
 }
 
 // Task represents a work task for agents
@@ -133,22 +133,23 @@ type Plugin struct {
 type VulnerabilityType string
 
 const (
-	VulnSQLInjection         VulnerabilityType = "sql_injection"
-	VulnXSS                  VulnerabilityType = "xss"
-	VulnCSRF                 VulnerabilityType = "csrf"
-	VulnIDOR                 VulnerabilityType = "idor"
-	VulnRCE                  VulnerabilityType = "rce"
-	VulnLFI                  VulnerabilityType = "lfi"
-	VulnRFI                  VulnerabilityType = "rfi"
-	VulnXXE                  VulnerabilityType = "xxe"
-	VulnSSRF                 VulnerabilityType = "ssrf"
-	VulnAuthBypass           VulnerabilityType = "auth_bypass"
-	VulnInsecureDeserialization VulnerabilityType = "insecure_deserialization"
+	VulnSQLInjection             VulnerabilityType = "sql_injection"
+	VulnXSS                      VulnerabilityType = "xss"
+	VulnCSRF                     VulnerabilityType = "csrf"
+	VulnIDOR                     VulnerabilityType = "idor"
+	VulnRCE                      VulnerabilityType = "rce"
+	VulnCommandInjection         VulnerabilityType = "command_injection"
+	VulnLFI                      VulnerabilityType = "lfi"
+	VulnRFI                      VulnerabilityType = "rfi"
+	VulnXXE                      VulnerabilityType = "xxe"
+	VulnSSRF                     VulnerabilityType = "ssrf"
+	VulnAuthBypass               VulnerabilityType = "auth_bypass"
+	VulnInsecureDeserialization  VulnerabilityType = "insecure_deserialization"
 	VulnSecurityMisconfiguration VulnerabilityType = "security_misconfiguration"
-	VulnBrokenAccessControl  VulnerabilityType = "broken_access_control"
-	VulnCryptographicFailure VulnerabilityType = "cryptographic_failure"
-	VulnInjection            VulnerabilityType = "injection"
-	VulnVulnerableComponents VulnerabilityType = "vulnerable_components"
+	VulnBrokenAccessControl      VulnerabilityType = "broken_access_control"
+	VulnCryptographicFailure     VulnerabilityType = "cryptographic_failure"
+	VulnInjection                VulnerabilityType = "injection"
+	VulnVulnerableComponents     VulnerabilityType = "vulnerable_components"
 )
 
 type Severity string
@@ -173,12 +174,12 @@ const (
 type VulnerabilityLocation string
 
 const (
-	LocationURL        VulnerabilityLocation = "url"
-	LocationHeader     VulnerabilityLocation = "header"
-	LocationBody       VulnerabilityLocation = "body"
-	LocationParameter  VulnerabilityLocation = "parameter"
-	LocationCookie     VulnerabilityLocation = "cookie"
-	LocationPath       VulnerabilityLocation = "path"
+	LocationURL       VulnerabilityLocation = "url"
+	LocationHeader    VulnerabilityLocation = "header"
+	LocationBody      VulnerabilityLocation = "body"
+	LocationParameter VulnerabilityLocation = "parameter"
+	LocationCookie    VulnerabilityLocation = "cookie"
+	LocationPath      VulnerabilityLocation = "path"
 )
 
 type SessionStatus string
@@ -193,59 +194,59 @@ const (
 type AgentType string
 
 const (
-	AgentTypeScanner     AgentType = "scanner"
-	AgentTypeRecon       AgentType = "recon"
-	AgentTypeExploiter   AgentType = "exploiter"
-	AgentTypeReporter    AgentType = "reporter"
-	AgentTypeCustom      AgentType = "custom"
+	AgentTypeScanner   AgentType = "scanner"
+	AgentTypeRecon     AgentType = "recon"
+	AgentTypeExploiter AgentType = "exploiter"
+	AgentTypeReporter  AgentType = "reporter"
+	AgentTypeCustom    AgentType = "custom"
 )
 
 type AgentStatus string
 
 const (
-	AgentStatusOnline   AgentStatus = "online"
-	AgentStatusOffline  AgentStatus = "offline"
-	AgentStatusBusy     AgentStatus = "busy"
-	AgentStatusError    AgentStatus = "error"
+	AgentStatusOnline  AgentStatus = "online"
+	AgentStatusOffline AgentStatus = "offline"
+	AgentStatusBusy    AgentStatus = "busy"
+	AgentStatusError   AgentStatus = "error"
 )
 
 type TaskType string
 
 const (
-	TaskTypeScan      TaskType = "scan"
-	TaskTypeRecon     TaskType = "recon"
-	TaskTypeExploit   TaskType = "exploit"
-	TaskTypeReport    TaskType = "report"
-	TaskTypeCustom    TaskType = "custom"
+	TaskTypeScan    TaskType = "scan"
+	TaskTypeRecon   TaskType = "recon"
+	TaskTypeExploit TaskType = "exploit"
+	TaskTypeReport  TaskType = "report"
+	TaskTypeCustom  TaskType = "custom"
 )
 
 type TaskStatus string
 
 const (
-	TaskStatusPending    TaskStatus = "pending"
-	TaskStatusRunning    TaskStatus = "running"
-	TaskStatusCompleted  TaskStatus = "completed"
-	TaskStatusFailed     TaskStatus = "failed"
-	TaskStatusCancelled  TaskStatus = "cancelled"
+	TaskStatusPending   TaskStatus = "pending"
+	TaskStatusRunning   TaskStatus = "running"
+	TaskStatusCompleted TaskStatus = "completed"
+	TaskStatusFailed    TaskStatus = "failed"
+	TaskStatusCancelled TaskStatus = "cancelled"
 )
 
 type TaskPriority int
 
 const (
-	TaskPriorityLow    TaskPriority = 1
-	TaskPriorityNormal TaskPriority = 2
-	TaskPriorityHigh   TaskPriority = 3
+	TaskPriorityLow      TaskPriority = 1
+	TaskPriorityNormal   TaskPriority = 2
+	TaskPriorityHigh     TaskPriority = 3
 	TaskPriorityCritical TaskPriority = 4
 )
 
 type PluginType string
 
 const (
-	PluginTypeScanner     PluginType = "scanner"
-	PluginTypeIntercept   PluginType = "intercept"
-	PluginTypePayload     PluginType = "payload"
-	PluginTypeReport      PluginType = "report"
-	PluginTypeExtension   PluginType = "extension"
+	PluginTypeScanner   PluginType = "scanner"
+	PluginTypeIntercept PluginType = "intercept"
+	PluginTypePayload   PluginType = "payload"
+	PluginTypeReport    PluginType = "report"
+	PluginTypeExtension PluginType = "extension"
 )
 
 type PluginStatus string
@@ -260,31 +261,31 @@ const (
 // Supporting struct types
 
 type SessionSettings struct {
-	ScanDepth         int               `json:"scan_depth"`
-	MaxRequests       int               `json:"max_requests"`
-	RequestDelay      time.Duration     `json:"request_delay"`
-	UserAgent         string            `json:"user_agent"`
-	CookieJar         map[string]string `json:"cookie_jar"`
-	Headers           map[string]string `json:"headers"`
-	FollowRedirects   bool              `json:"follow_redirects"`
-	VerifySSL         bool              `json:"verify_ssl"`
-	ProxySettings     ProxySettings     `json:"proxy_settings"`
-	AIEnabled         bool              `json:"ai_enabled"`
-	AIModel           string            `json:"ai_model"`
-	PluginSettings    map[string]interface{} `json:"plugin_settings"`
+	ScanDepth       int                    `json:"scan_depth"`
+	MaxRequests     int                    `json:"max_requests"`
+	RequestDelay    time.Duration          `json:"request_delay"`
+	UserAgent       string                 `json:"user_agent"`
+	CookieJar       map[string]string      `json:"cookie_jar"`
+	Headers         map[string]string      `json:"headers"`
+	FollowRedirects bool                   `json:"follow_redirects"`
+	VerifySSL       bool                   `json:"verify_ssl"`
+	ProxySettings   ProxySettings          `json:"proxy_settings"`
+	AIEnabled       bool                   `json:"ai_enabled"`
+	AIModel         string                 `json:"ai_model"`
+	PluginSettings  map[string]interface{} `json:"plugin_settings"`
 }
 
 type SessionStatistics struct {
-	RequestCount      int            `json:"request_count"`
-	ResponseCount     int            `json:"response_count"`
-	VulnerabilityCount int           `json:"vulnerability_count"`
-	ErrorCount        int            `json:"error_count"`
-	AvgResponseTime   time.Duration  `json:"avg_response_time"`
-	TotalDataTransfer int64          `json:"total_data_transfer"`
-	ScanProgress      float64        `json:"scan_progress"`
-	StartTime         time.Time      `json:"start_time"`
-	EndTime           *time.Time     `json:"end_time"`
-	VulnsBySeverity   map[Severity]int `json:"vulns_by_severity"`
+	RequestCount       int              `json:"request_count"`
+	ResponseCount      int              `json:"response_count"`
+	VulnerabilityCount int              `json:"vulnerability_count"`
+	ErrorCount         int              `json:"error_count"`
+	AvgResponseTime    time.Duration    `json:"avg_response_time"`
+	TotalDataTransfer  int64            `json:"total_data_transfer"`
+	ScanProgress       float64          `json:"scan_progress"`
+	StartTime          time.Time        `json:"start_time"`
+	EndTime            *time.Time       `json:"end_time"`
+	VulnsBySeverity    map[Severity]int `json:"vulns_by_severity"`
 }
 
 type ProxySettings struct {
@@ -297,12 +298,12 @@ type ProxySettings struct {
 }
 
 type ResourceUsage struct {
-	CPUPercent    float64   `json:"cpu_percent"`
-	MemoryMB      int       `json:"memory_mb"`
-	DiskMB        int       `json:"disk_mb"`
-	NetworkInMB   int       `json:"network_in_mb"`
-	NetworkOutMB  int       `json:"network_out_mb"`
-	UpdatedAt     time.Time `json:"updated_at"`
+	CPUPercent   float64   `json:"cpu_percent"`
+	MemoryMB     int       `json:"memory_mb"`
+	DiskMB       int       `json:"disk_mb"`
+	NetworkInMB  int       `json:"network_in_mb"`
+	NetworkOutMB int       `json:"network_out_mb"`
+	UpdatedAt    time.Time `json:"updated_at"`
 }
 
 type TaskResult struct {
@@ -315,27 +316,27 @@ type TaskResult struct {
 }
 
 type TaskMetrics struct {
-	Duration        time.Duration `json:"duration"`
-	RequestsSent    int           `json:"requests_sent"`
-	ResponsesReceived int         `json:"responses_received"`
-	DataTransferred int64         `json:"data_transferred"`
-	VulnsFound      int           `json:"vulns_found"`
+	Duration          time.Duration `json:"duration"`
+	RequestsSent      int           `json:"requests_sent"`
+	ResponsesReceived int           `json:"responses_received"`
+	DataTransferred   int64         `json:"data_transferred"`
+	VulnsFound        int           `json:"vulns_found"`
 }
 
 type PluginManifest struct {
-	Name         string                 `json:"name"`
-	Version      string                 `json:"version"`
-	Author       string                 `json:"author"`
-	Description  string                 `json:"description"`
-	Homepage     string                 `json:"homepage"`
-	License      string                 `json:"license"`
-	Type         PluginType             `json:"type"`
-	EntryPoint   string                 `json:"entry_point"`
-	Dependencies []string               `json:"dependencies"`
-	Permissions  []string               `json:"permissions"`
+	Name          string                       `json:"name"`
+	Version       string                       `json:"version"`
+	Author        string                       `json:"author"`
+	Description   string                       `json:"description"`
+	Homepage      string                       `json:"homepage"`
+	License       string                       `json:"license"`
+	Type          PluginType                   `json:"type"`
+	EntryPoint    string                       `json:"entry_point"`
+	Dependencies  []string                     `json:"dependencies"`
+	Permissions   []string                     `json:"permissions"`
 	Configuration map[string]PluginConfigField `json:"configuration"`
-	Hooks        []string               `json:"hooks"`
-	MinVersion   string                 `json:"min_version"`
+	Hooks         []string                     `json:"hooks"`
+	MinVersion    string                       `json:"min_version"`
 }
 
 type PluginConfigField struct {
@@ -405,32 +406,32 @@ func NewVulnerability(vulnType VulnerabilityType, severity Severity, title, desc
 // NewSession creates a new session
 func NewSession(name, targetURL string) *Session {
 	return &Session{
-		ID:          uuid.New().String(),
-		Name:        name,
-		TargetURL:   targetURL,
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
-		Status:      SessionStatusActive,
-		Scope:       []string{targetURL},
-		Settings:    SessionSettings{},
-		Statistics:  SessionStatistics{},
-		Metadata:    make(map[string]interface{}),
+		ID:         uuid.New().String(),
+		Name:       name,
+		TargetURL:  targetURL,
+		CreatedAt:  time.Now(),
+		UpdatedAt:  time.Now(),
+		Status:     SessionStatusActive,
+		Scope:      []string{targetURL},
+		Settings:   SessionSettings{},
+		Statistics: SessionStatistics{},
+		Metadata:   make(map[string]interface{}),
 	}
 }
 
 // NewAgent creates a new agent
 func NewAgent(name string, agentType AgentType, host string, port int) *Agent {
 	return &Agent{
-		ID:           uuid.New().String(),
-		Name:         name,
-		Type:         agentType,
-		Status:       AgentStatusOffline,
-		Host:         host,
-		Port:         port,
-		RegisteredAt: time.Now(),
-		Capabilities: []string{},
-		Tags:         []string{},
-		TaskQueue:    []string{},
+		ID:            uuid.New().String(),
+		Name:          name,
+		Type:          agentType,
+		Status:        AgentStatusOffline,
+		Host:          host,
+		Port:          port,
+		RegisteredAt:  time.Now(),
+		Capabilities:  []string{},
+		Tags:          []string{},
+		TaskQueue:     []string{},
 		Configuration: make(map[string]interface{}),
 	}
 }

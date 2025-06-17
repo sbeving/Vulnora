@@ -1,0 +1,178 @@
+# Vulnora Default Configuration
+
+app:
+  name: "Vulnora"
+  version: "1.0.0"
+  environment: "development"
+  data_dir: "./data"
+  plugin_dir: "./plugins"
+  temp_dir: "./tmp"
+
+proxy:
+  host: "127.0.0.1"
+  port: 8080
+  tls_port: 8443
+  cert_file: "./certs/vulnora.crt"
+  key_file: "./certs/vulnora.key"
+  upstream_proxy: ""
+  allowed_hosts: []
+  blocked_hosts: []
+  max_connections: 1000
+  request_timeout: 30
+  response_timeout: 30
+
+ai:
+  provider: "ollama"
+  ollama_url: "http://localhost:11434"
+  model: "llama2"
+  max_tokens: 4096
+  temperature: 0.7
+  timeout: 30
+  knowledge_db: "./data/knowledge.db"
+  prompts:
+    vulnerability_analysis: |
+      Analyze the following HTTP request/response for security vulnerabilities.
+      Focus on common web application vulnerabilities like SQL injection, XSS, CSRF, etc.
+      Provide a detailed analysis with confidence levels and remediation suggestions.
+      
+      Request: {request}
+      Response: {response}
+      
+      Output format: JSON with fields: vulnerabilities, confidence, suggestions, payloads
+    payload_generation: |
+      Generate test payloads for {vulnerability_type} testing based on the following context:
+      {context}
+      
+      Provide a variety of payloads including:
+      - Basic test cases
+      - Bypass techniques
+      - Advanced exploitation vectors
+      
+      Output as JSON array of payload strings.
+    exploit_suggestion: |
+      Suggest exploitation techniques for the following vulnerability:
+      {vulnerability}
+      
+      Consider the application context and provide:
+      - Step-by-step exploitation guide
+      - Required prerequisites
+      - Potential impact
+      - Detection evasion techniques
+      
+      Output as structured JSON.
+
+agent:
+  manager:
+    host: "127.0.0.1"
+    port: 9090
+    tls_enabled: true
+    cert_file: "./certs/agent-manager.crt"
+    key_file: "./certs/agent-manager.key"
+    max_workers: 10
+    task_timeout: 300
+    health_interval: 30
+    retry_attempts: 3
+  worker:
+    id: ""  # Auto-generated if empty
+    tags: ["scanner", "general"]
+    max_concurrency: 5
+    resource_limits:
+      max_memory_mb: 1024
+      max_cpu_usage: 80
+      max_disk_mb: 512
+    report_interval: 10
+    manager_endpoint: "localhost:9090"
+
+database:
+  type: "sqlite"
+  path: "./data/vulnora.db"
+  host: ""
+  port: 0
+  name: ""
+  user: ""
+  password: ""
+  max_open_conns: 25
+  max_idle_conns: 5
+  ssl_mode: "disable"
+
+api:
+  host: "127.0.0.1"
+  port: 8081
+  tls_enabled: false
+  cert_file: "./certs/api.crt"
+  key_file: "./certs/api.key"
+  allowed_origins: ["*"]
+  auth_enabled: true
+  jwt_secret: "your-secret-key-here"  # Change in production!
+  rate_limit:
+    enabled: true
+    requests_per_minute: 100
+    burst_size: 10
+
+scanner:
+  modules:
+    sql_injection:
+      enabled: true
+      payloads_file: "./assets/payloads/sqli.txt"
+      error_patterns_file: "./assets/patterns/sqli-errors.txt"
+      time_delay: 5
+      confidence_threshold: 0.7
+    xss:
+      enabled: true
+      payloads_file: "./assets/payloads/xss.txt"
+      context_analysis: true
+      dom_analysis: true
+      confidence_threshold: 0.8
+    csrf:
+      enabled: true
+      token_analysis: true
+      referer_check: true
+    idor:
+      enabled: true
+      parameter_analysis: true
+      object_enumeration: true
+    rce:
+      enabled: true
+      payloads_file: "./assets/payloads/rce.txt"
+      time_delay: 10
+      confidence_threshold: 0.9
+  settings:
+    max_depth: 3
+    max_requests_per_host: 1000
+    request_delay: 100  # milliseconds
+    follow_redirects: true
+    verify_ssl: false
+    user_agent: "Vulnora/1.0.0 Security Scanner"
+    concurrent_requests: 10
+    timeout: 30
+
+security:
+  tls_min_version: "1.2"
+  allowed_ciphers:
+    - "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    - "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+    - "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305"
+  hsts_enabled: true
+  csp_header: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+  plugin_sandbox: true
+  input_validation: true
+  encryption_key: "change-this-32-byte-key-in-prod!!"  # Must be 32 bytes for AES-256
+
+logging:
+  level: "info"
+  format: "json"
+  output: "file"
+  file: "./logs/vulnora.log"
+  max_size: 100  # megabytes
+  max_backups: 10
+  max_age: 30  # days
+  compress: true
+
+plugins:
+  enabled: true
+  directory: "./plugins"
+  auto_load: true
+  sandbox: true
+  api_version: "v1"
+  max_memory: 256  # MB per plugin
+  timeout: 60  # seconds

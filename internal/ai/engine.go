@@ -77,6 +77,17 @@ type ExploitSuggestion struct {
 	References   []string `json:"references"`
 }
 
+// PromptManager manages AI prompts
+type PromptManager struct {
+	prompts map[string]string
+}
+
+// KnowledgeBase contains vulnerability knowledge
+type KnowledgeBase struct {
+	vulnerabilities map[core.VulnerabilityType]map[string]interface{}
+	exploits        map[core.VulnerabilityType][]string
+}
+
 // NewEngine creates a new AI engine instance
 func NewEngine(config *core.AIConfig, logger *logrus.Logger) (*Engine, error) {
 	engine := &Engine{
@@ -86,7 +97,7 @@ func NewEngine(config *core.AIConfig, logger *logrus.Logger) (*Engine, error) {
 			Timeout: time.Duration(config.Timeout) * time.Second,
 		},
 		prompts:   NewPromptManager(),
-		knowledge: NewKnowledgeBase(config.KnowledgeDB, logger),
+		knowledge: NewKnowledgeBase(),
 	}
 
 	// Test connection to AI provider
@@ -445,6 +456,85 @@ func (e *Engine) parseExploitsFromResponse(response string) ([]ExploitSuggestion
 	}
 
 	return exploits, nil
+}
+
+// NewPromptManager creates a new prompt manager
+func NewPromptManager() *PromptManager {
+	return &PromptManager{
+		prompts: make(map[string]string),
+	}
+}
+
+// NewKnowledgeBase creates a new knowledge base
+func NewKnowledgeBase() *KnowledgeBase {
+	return &KnowledgeBase{
+		vulnerabilities: make(map[core.VulnerabilityType]map[string]interface{}),
+		exploits:        make(map[core.VulnerabilityType][]string),
+	}
+}
+
+// GenerateAnalysisPrompt generates a prompt for vulnerability analysis
+func (pm *PromptManager) GenerateAnalysisPrompt(context map[string]interface{}) string {
+	// TODO: Implement prompt generation
+	return "Analyze this for vulnerabilities"
+}
+
+// GenerateRequestAnalysisPrompt generates a prompt for request analysis
+func (pm *PromptManager) GenerateRequestAnalysisPrompt(context map[string]interface{}) string {
+	// TODO: Implement prompt generation
+	return "Analyze this HTTP request for vulnerabilities"
+}
+
+// GenerateResponseAnalysisPrompt generates a prompt for response analysis
+func (pm *PromptManager) GenerateResponseAnalysisPrompt(context map[string]interface{}) string {
+	// TODO: Implement prompt generation
+	return "Analyze this HTTP response for vulnerabilities"
+}
+
+// GeneratePayloadPrompt generates a prompt for payload creation
+func (pm *PromptManager) GeneratePayloadPrompt(context map[string]interface{}) string {
+	// TODO: Implement prompt generation
+	return "Generate payloads for this vulnerability"
+}
+
+// GenerateExploitPrompt generates a prompt for exploit suggestions
+func (pm *PromptManager) GenerateExploitPrompt(context map[string]interface{}) string {
+	// TODO: Implement prompt generation
+	return "Suggest exploitation techniques"
+}
+
+// GenerateCodeAnalysisPrompt generates a prompt for code analysis
+func (pm *PromptManager) GenerateCodeAnalysisPrompt(context map[string]interface{}) string {
+	// TODO: Implement prompt generation
+	return "Analyze this code for vulnerabilities"
+}
+
+// GetVulnerabilityInfo returns vulnerability information
+func (kb *KnowledgeBase) GetVulnerabilityInfo(vulnType core.VulnerabilityType) map[string]interface{} {
+	if info, exists := kb.vulnerabilities[vulnType]; exists {
+		return info
+	}
+	return make(map[string]interface{})
+}
+
+// GetPayloads returns payload information
+func (kb *KnowledgeBase) GetPayloads(vulnType core.VulnerabilityType) []string {
+	// TODO: Implement
+	return []string{}
+}
+
+// GetExploitInfo returns exploit information
+func (kb *KnowledgeBase) GetExploitInfo(vulnType core.VulnerabilityType) []string {
+	if exploits, exists := kb.exploits[vulnType]; exists {
+		return exploits
+	}
+	return []string{}
+}
+
+// GetCodePatterns returns code patterns for a language
+func (kb *KnowledgeBase) GetCodePatterns(language string) []string {
+	// TODO: Implement
+	return []string{}
 }
 
 // Helper methods

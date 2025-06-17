@@ -1,0 +1,32 @@
+# GOlang .gitignore
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+# Test binary, build with `go test -c`
+*.test
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+# Vendor directory
+vendor/
+# Go workspace file
+go.work
+# Go module files
+go.mod
+go.sum
+# IDE specific files
+.idea/
+# Local configuration files
+*.local
+# Logs
+*.log
+# Temporary files
+*.tmp
+# Backup files
+*.bak
+# OS generated files
+.DS_Store
+# Coverage files
+coverage.out

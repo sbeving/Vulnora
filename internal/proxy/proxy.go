@@ -20,19 +20,19 @@ import (
 
 // Proxy represents the HTTP/HTTPS proxy server
 type Proxy struct {
-	config          *core.ProxyConfig
-	logger          *logrus.Logger
-	interceptor     *Interceptor
-	certificate     *CertificateManager
-	server          *http.Server
-	tlsServer       *http.Server
-	sessions        map[string]*core.Session
-	sessionsMutex   sync.RWMutex
-	middleware      []MiddlewareFunc
-	running         bool
-	runningMutex    sync.RWMutex
-	stats           ProxyStats
-	statsMutex      sync.RWMutex
+	config        *core.ProxyConfig
+	logger        *logrus.Logger
+	interceptor   *Interceptor
+	certificate   *CertificateManager
+	server        *http.Server
+	tlsServer     *http.Server
+	sessions      map[string]*core.Session
+	sessionsMutex sync.RWMutex
+	middleware    []MiddlewareFunc
+	running       bool
+	runningMutex  sync.RWMutex
+	stats         ProxyStats
+	statsMutex    sync.RWMutex
 }
 
 // ProxyStats holds proxy statistics
@@ -50,8 +50,8 @@ type MiddlewareFunc func(http.ResponseWriter, *http.Request, http.HandlerFunc)
 
 // NewProxy creates a new proxy instance
 func NewProxy(config *core.ProxyConfig, logger *logrus.Logger) (*Proxy, error) {
-	interceptor := NewInterceptor(logger)
-	certManager, err := NewCertificateManager(config.CertFile, config.KeyFile, logger)
+	interceptor := NewInterceptor(config, logger)
+	certManager, err := NewCertificateManager(config, logger)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create certificate manager: %w", err)
 	}
@@ -80,8 +80,10 @@ func NewProxy(config *core.ProxyConfig, logger *logrus.Logger) (*Proxy, error) {
 	// Setup HTTPS server if TLS is configured
 	if config.CertFile != "" && config.KeyFile != "" {
 		tlsConfig := &tls.Config{
-			GetCertificate: certManager.GetCertificate,
-			MinVersion:     tls.VersionTLS12,
+			GetCertificate: func(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
+				return certManager.GetCertificateForHost(hello.ServerName)
+			},
+			MinVersion: tls.VersionTLS12,
 		}
 
 		proxy.tlsServer = &http.Server{
@@ -226,15 +228,13 @@ func (p *Proxy) handleRequest(w http.ResponseWriter, r *http.Request) {
 
 // handleHTTP handles regular HTTP requests
 func (p *Proxy) handleHTTP(w http.ResponseWriter, r *http.Request) {
-	sessionID := p.getSessionID(r)
-	
 	// Intercept request
-	intercepted, modified := p.interceptor.InterceptRequest(r, sessionID)
-	if intercepted && !modified {
-		// Request was blocked
-		http.Error(w, "Request blocked by interceptor", http.StatusForbidden)
+	modifiedReq, err := p.interceptor.InterceptRequest(r)
+	if err != nil {
+		http.Error(w, "Request processing error", http.StatusInternalServerError)
 		return
 	}
+	r = modifiedReq
 
 	// Create HTTP client with proxy configuration
 	client := p.createHTTPClient()
@@ -252,12 +252,12 @@ func (p *Proxy) handleHTTP(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 
 	// Intercept response
-	intercepted, modified = p.interceptor.InterceptResponse(resp, sessionID)
-	if intercepted && !modified {
-		// Response was blocked
-		http.Error(w, "Response blocked by interceptor", http.StatusForbidden)
+	modifiedResp, err := p.interceptor.InterceptResponse(resp)
+	if err != nil {
+		http.Error(w, "Response processing error", http.StatusInternalServerError)
 		return
 	}
+	resp = modifiedResp
 
 	// Copy response headers
 	for k, v := range resp.Header {
@@ -371,24 +371,13 @@ func (p *Proxy) handleInterceptedHTTPS(clientConn, targetConn *tls.Conn, host st
 	req.URL.Scheme = "https"
 	req.URL.Host = host
 
-	sessionID := p.getSessionID(req)
-
 	// Intercept request
-	intercepted, modified := p.interceptor.InterceptRequest(req, sessionID)
-	if intercepted && !modified {
-		// Send error response
-		resp := &http.Response{
-			Status:     "403 Forbidden",
-			StatusCode: 403,
-			Proto:      "HTTP/1.1",
-			ProtoMajor: 1,
-			ProtoMinor: 1,
-			Header:     make(http.Header),
-			Body:       io.NopCloser(strings.NewReader("Request blocked")),
-		}
-		resp.Write(clientConn)
+	modifiedReq, err := p.interceptor.InterceptRequest(req)
+	if err != nil {
+		p.logger.Errorf("Failed to intercept request: %v", err)
 		return
 	}
+	req = modifiedReq
 
 	// Forward request to target
 	if err := req.Write(targetConn); err != nil {
@@ -405,21 +394,12 @@ func (p *Proxy) handleInterceptedHTTPS(clientConn, targetConn *tls.Conn, host st
 	}
 
 	// Intercept response
-	intercepted, modified = p.interceptor.InterceptResponse(resp, sessionID)
-	if intercepted && !modified {
-		// Send error response
-		errorResp := &http.Response{
-			Status:     "403 Forbidden",
-			StatusCode: 403,
-			Proto:      "HTTP/1.1",
-			ProtoMajor: 1,
-			ProtoMinor: 1,
-			Header:     make(http.Header),
-			Body:       io.NopCloser(strings.NewReader("Response blocked")),
-		}
-		errorResp.Write(clientConn)
+	modifiedResp, err := p.interceptor.InterceptResponse(resp)
+	if err != nil {
+		p.logger.Errorf("Failed to intercept response: %v", err)
 		return
 	}
+	resp = modifiedResp
 
 	// Forward response to client
 	if err := resp.Write(clientConn); err != nil {

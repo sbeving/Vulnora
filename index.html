@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulnora Documentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="assets/styles.css">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            hljs.initHighlightingOnLoad();
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ]
+            });
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+            document.querySelectorAll('a[href^="http"]').forEach(link => {
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener noreferrer');
+            });
+            document.querySelectorAll('img').forEach(img => {
+                img.setAttribute('loading', 'lazy');
+            });
+            document.querySelectorAll('pre code').forEach(block => {
+                hljs.highlightBlock(block);
+            });
+            document.querySelectorAll('a').forEach(link => {
+                if (link.textContent.trim() === '') {
+                    link.style.display = 'none';
+                }
+            });
+            document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(header => {
+                header.addEventListener('click', function() {
+                    this.classList.toggle('collapsed');
+                });
+            });
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+            document.querySelectorAll('a[href^="http"]').forEach(link => {
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener noreferrer');
+            });
+            document.querySelectorAll('img').forEach(img => {
+                img.setAttribute('loading', 'lazy');
+            });
+            document.querySelectorAll('pre code').forEach(block => {
+                hljs.highlightBlock(block);
+            });
+            document.querySelectorAll('a').forEach(link => {
+                if (link.textContent.trim() === '') {
+                    link.style.display = 'none';
+                }
+            });
+            document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(header => {
+                header.addEventListener('click', function() {
+                    this.classList.toggle('collapsed');
+                });
+            });
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+            document.querySelectorAll('a[href^="http"]').forEach(link => {
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener noreferrer');
+            });
+            document.querySelectorAll('img').forEach(img => {
+                img.setAttribute('loading', 'lazy');
+            });
+            document.querySelectorAll('pre code').forEach(block => {
+                hljs.highlightBlock(block);
+            });
+            document.querySelectorAll('a').forEach(link => {
+                if (link.textContent.trim() === '') {
+                    link.style.display = 'none';
+                }
+            });
+            document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(header => {
+                header.addEventListener('click', function() {
+                    this.classList.toggle('collapsed');
+                });
+            });
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+            document.querySelectorAll('a[href^="http"]').forEach(link => {
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener noreferrer');
+            });
+        
+        }); 
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Vulnora</h1>
+    </header>
+    <main>
+        <section id="introduction">
+            <h2>Introduction</h2>
+            <p>Vulnora is a tool for identifying and mitigating vulnerabilities in your code.</p>
+        </section>
+        <section id="features">
+            <h2>Features</h2>
+            <ul>
+                <li>Static code analysis</li>
+                <li>Dependency scanning</li>
+                <li>Real-time feedback</li>
+            </ul>
+        </section>
+        <section id="installation">
+            <h2>Installation</h2>
+            <p>To install Vulnora, run the following command:</p>
+            <pre><code>go get github.com/vulnora/vulnora</code></pre>
+        </section>
+        <section id="usage">
+            <h2>Usage</h2>
+            <p>To use Vulnora, run the following command:</p>
+            <pre><code>vulnora scan</code></pre>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Vulnora</p>
+    </footer>
+</body>
+</html>
